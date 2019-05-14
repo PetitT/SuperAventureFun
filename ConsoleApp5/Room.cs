@@ -10,8 +10,7 @@ namespace ConsoleApp5
     {
         public string description;
         public int id;
-
-
+        
         public Dictionary<string, int> sorties = new Dictionary<string, int>()
         {
         }

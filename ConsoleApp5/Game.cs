@@ -27,23 +27,34 @@ namespace ConsoleApp5
         public void Run()
         {
 
-            roomList.Add(new Room("Bienvenue dans le donjon", 0));
+            roomList.Add(new Room("Entrée du donjon", 0));
             roomList[0].sorties.Add("north", 1);
 
                  
             roomList.Add(new Room("La chambre des secrets", 1));
             roomList[1].sorties.Add("east", 2);
             roomList[1].sorties.Add("west", 3);
+            roomList[1].sorties.Add("south", 0);
 
                  
             roomList.Add(new Room("Nulle part", 2));
             roomList[2].sorties.Add("north", 4);
             roomList[2].sorties.Add("west", 1);
+
+            roomList.Add(new Room("Stade Pokémon de Jotho", 3));
+            roomList[3].sorties.Add("east", 1);
+
+            roomList.Add(new Room("Super U de Hesdigneul-Les-Boulays", 4));
+            roomList[4].sorties.Add("south", 2);
+            roomList[4].sorties.Add("north", 5);
+
+            roomList.Add(new Room("Wow quelle aventure ce fut! Je n'en crois pas mes yeux, c'était tellement bien!", 5));
+            roomList[5].sorties.Add("south", 4);
                  
 
                  Console.WriteLine(roomList[0].description);
 
-
+                 var currentRoom = roomList[0];
 
                 while (true)
                 {
@@ -53,7 +64,7 @@ namespace ConsoleApp5
                     var commande = inputSplit[0].ToLower();
                     var chose = inputSplit[1].ToLower();
 
-                    var currentRoom = roomList[0];
+                    
                
 
 
@@ -85,7 +96,15 @@ namespace ConsoleApp5
 
             void Go(string chose)
             {
-                 
+                 if (!currentRoom.sorties.ContainsKey(chose))
+                {
+                    Console.WriteLine("Lol tu t'es pris le mur");
+                }
+                 else
+                {
+                    currentRoom = roomList[currentRoom.sorties[chose]];
+                    Console.WriteLine(currentRoom.description);
+                }
             }
             
             void Take(string chose)
