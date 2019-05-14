@@ -9,6 +9,7 @@ namespace ConsoleApp5
     class Game
     {
         Dictionary<string, int> inventaire = new Dictionary<string, int>();
+
         Dictionary<string, string> effects = new Dictionary<string, string>()
         {
             {"potion", "Refreshing!" },
@@ -18,8 +19,32 @@ namespace ConsoleApp5
             {"bike", "Now is not the time to use that..." },
 
         };
+
+
+        public List<Room> roomList = new List<Room>();
+
+    
         public void Run()
-        {            
+        {
+
+            roomList.Add(new Room("Bienvenue dans le donjon", 0));
+            roomList[0].sorties.Add("north", 1);
+
+                 
+            roomList.Add(new Room("La chambre des secrets", 1));
+            roomList[1].sorties.Add("east", 2);
+            roomList[1].sorties.Add("west", 3);
+
+                 
+            roomList.Add(new Room("Nulle part", 2));
+            roomList[2].sorties.Add("north", 4);
+            roomList[2].sorties.Add("west", 1);
+                 
+
+                 Console.WriteLine(roomList[0].description);
+
+
+
                 while (true)
                 {
 
@@ -27,6 +52,9 @@ namespace ConsoleApp5
                     var inputSplit = input.Split(' ');
                     var commande = inputSplit[0].ToLower();
                     var chose = inputSplit[1].ToLower();
+
+                    var currentRoom = roomList[0];
+               
 
 
                     switch (commande)
@@ -43,6 +71,10 @@ namespace ConsoleApp5
                             Use(chose);
                             break;
 
+                        case ("go"):
+                            Go(chose);
+                            break;
+
                         default:
                             Console.WriteLine("I didn't understand");
                             break;
@@ -50,6 +82,11 @@ namespace ConsoleApp5
                     }
 
                 }
+
+            void Go(string chose)
+            {
+                 
+            }
             
             void Take(string chose)
             {
@@ -105,6 +142,7 @@ namespace ConsoleApp5
 
 
             }
+
             void minusOne(string chose)
             {
                 inventaire[chose]--;
