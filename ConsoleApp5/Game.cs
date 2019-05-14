@@ -28,33 +28,53 @@ namespace ConsoleApp5
         {
 
             roomList.Add(new Room("Entrée du donjon", 0));
+
             roomList[0].sorties.Add("north", 1);
+
+            roomList[0].objets.Add("potion", 1);
 
                  
             roomList.Add(new Room("La chambre des secrets", 1));
+
             roomList[1].sorties.Add("east", 2);
             roomList[1].sorties.Add("west", 3);
             roomList[1].sorties.Add("south", 0);
 
+            roomList[1].objets.Add("staff", 1);
+
                  
             roomList.Add(new Room("Nulle part", 2));
+
             roomList[2].sorties.Add("north", 4);
             roomList[2].sorties.Add("west", 1);
 
             roomList.Add(new Room("Stade Pokémon de Jotho", 3));
+
             roomList[3].sorties.Add("east", 1);
 
+            roomList[3].objets.Add("pikachu", 1);
+
             roomList.Add(new Room("Super U de Hesdigneul-Les-Boulays", 4));
+
+
             roomList[4].sorties.Add("south", 2);
             roomList[4].sorties.Add("north", 5);
 
+            roomList[4].objets.Add("bike", 1);
+
             roomList.Add(new Room("Wow quelle aventure ce fut! Je n'en crois pas mes yeux, c'était tellement bien!", 5));
+
             roomList[5].sorties.Add("south", 4);
-                 
 
-                 Console.WriteLine(roomList[0].description);
+            roomList[5].objets.Add("deuillegivre", 1);
 
-                 var currentRoom = roomList[0];
+            var currentRoom = roomList[0];
+            
+
+                 Console.WriteLine("Bienvenue dans, genre le donjon le plus compliqué du monde");
+                 currentRoom.Decrit();
+
+                 ;
 
                 while (true)
                 {
@@ -103,22 +123,41 @@ namespace ConsoleApp5
                  else
                 {
                     currentRoom = roomList[currentRoom.sorties[chose]];
-                    Console.WriteLine(currentRoom.description);
+                    currentRoom.Decrit();
+                    
                 }
             }
             
             void Take(string chose)
             {
-                Console.WriteLine("You took " + chose);
-                if (!inventaire.ContainsKey(chose))
+                if(currentRoom.objets.ContainsKey(chose))
                 {
-                    inventaire.Add(chose, 1);
+                    if(currentRoom.objets[chose]>0)
+                    {
+                           Console.WriteLine("You took " + chose);
+                           if (!inventaire.ContainsKey(chose))
+                           {
+                           inventaire.Add(chose, 1);
+                           }
+                           else
+                           {
+                           inventaire[chose]++;
+                           }
+                           Console.WriteLine(string.Format("You have {0} {1} in your inventory", inventaire[chose], chose));
+                           currentRoom.objets[chose]--;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Il n'y en a plus...");
+                    }
+
                 }
                 else
                 {
-                    inventaire[chose]++;
+                    Console.WriteLine("Il n'y a pas de " + chose + " ici"); 
                 }
-                Console.WriteLine(string.Format("You have {0} {1} in your inventory", inventaire[chose], chose));
+
+                
             }
 
             void Drop(string chose)
