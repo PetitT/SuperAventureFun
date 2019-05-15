@@ -13,6 +13,7 @@ namespace ConsoleApp5
         
         public Dictionary<string, int> sorties = new Dictionary<string, int>();
         public Dictionary<string, int> objets = new Dictionary<string, int>();
+
         public List<Monstre> enemis = new List<Monstre>();
             
         public void Decrit()
