@@ -73,7 +73,7 @@ namespace ConsoleApp5
 
                     roomList[5].objets.Add("deuillelombre", 1);
 
-                    roomList[5].enemis.Add((new Monstre("Le dieu de la mort te fait coucou", "Littéralement épique", "pikachu")));                
+                    roomList[5].enemis.Add((new Monstre("Le dieu de la mort te fait coucou", "Littéralement épique", "pikachu", true)));                
                     
         }
 
@@ -82,8 +82,7 @@ namespace ConsoleApp5
 
 
             var currentRoom = roomList[0];
-            var finalBoss = roomList[5].enemis;
-
+           
             Console.WriteLine("Bienvenue dans, genre le donjon le plus compliqué du monde");
             currentRoom.Decrit();
 
@@ -218,12 +217,14 @@ namespace ConsoleApp5
                         if (currentRoom.enemis[i].weakPoint == chose)
                         {
                             currentRoom.enemis[i].Die();
+                            if(currentRoom.enemis[i].finalBoss == true)
+                                                            {
+                                                            endGame();
+                                                            } 
+
                             currentRoom.enemis.RemoveAt(i);
                             minusOne(chose);
-                                if(currentRoom.enemis == finalBoss)
-                                {
-                                endGame();
-                                }                                                        
+                                                                                       
                         }
                     }                 
                    
@@ -261,6 +262,18 @@ namespace ConsoleApp5
             void endGame()
             {
                 Console.WriteLine("Wow toutes mes félicitations!");
+                Console.WriteLine("Rejouer?");
+                var rejouer = Console.ReadLine();
+                if (rejouer == "oui")
+                {
+                    Console.Clear();
+                    Run();
+                }
+                else
+                {
+                    Console.WriteLine("Tu n'as pas d'autre choix, mortel!");
+                    endGame();
+                }
             }
                        
         }
