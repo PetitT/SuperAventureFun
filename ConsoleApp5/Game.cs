@@ -8,22 +8,26 @@ namespace ConsoleApp5
 {
     class Game
     {
-        Dictionary<string, int> inventaire = new Dictionary<string, int>();
 
-        Dictionary<string, string> effects = new Dictionary<string, string>()
+         
+
+           Room currentRoom;
+
+        Dictionary<string, int> inventaire = new Dictionary<string, int>();
+        Dictionary<string, string> effects = new Dictionary<string, string>() 
         {
             {"potion", "Refreshing!" },
             {"staff", "By fire be purged!" },
             {"deuillelombre","Vos cris d'agonie seront un hymne à ma puissance illimitée"},
             {"pikachu", "PIKAAAAAAACHUUUUUUUUUUUUUUUUUUUUUUUU" },
             {"bike", "Now is not the time to use that..." },
-
         };
 
-        public List<Room> roomList = new List<Room>();
+        public static List<Room> roomList = new List<Room>();
 
         public void CreateLevel()
-        {
+        {       
+
                     //Room0
                     roomList.Add(new Room("Entrée du donjon", 0));
 
@@ -73,29 +77,27 @@ namespace ConsoleApp5
 
                     roomList[5].objets.Add("deuillelombre", 1);
 
-                    roomList[5].enemis.Add((new Monstre("Le dieu de la mort te fait coucou", "Littéralement épique", "pikachu", true)));                
-                    
+                    roomList[5].enemis.Add((new Monstre("Le dieu de la mort te fait coucou", "Littéralement épique", "pikachu", true)));
+
+                    currentRoom = roomList[0];
+
         }
 
         public void Run()
-        {
-
-
-            var currentRoom = roomList[0];
-           
+        {           
             Console.WriteLine("Bienvenue dans, genre le donjon le plus compliqué du monde");
             currentRoom.Decrit();
 
-            while (true)
-            {
+            bool isPlaying = true;
 
+            while (isPlaying == true)
+            {
                 var input = Console.ReadLine();
                 var inputSplit = input.Split(' ');
                 var commande = inputSplit[0].ToLower();
-                var chose = inputSplit[1].ToLower();
+                var chose = inputSplit[1].ToLower();                 
                 
-                
-                                                          
+                // Input
                 switch (commande)
                 {
                     case ("take"):
@@ -122,9 +124,9 @@ namespace ConsoleApp5
                         Console.WriteLine("I didn't understand");
                         break;
                 }
-
             }
 
+            //Déplacement entre salles
             void Go(string chose)
             {
                 if (!currentRoom.sorties.ContainsKey(chose))
@@ -135,10 +137,10 @@ namespace ConsoleApp5
                 {
                     currentRoom = roomList[currentRoom.sorties[chose]];
                     currentRoom.Decrit();
-
                 }
             }
 
+            //Prendre objet
             void Take(string chose)
             {
                 if (currentRoom.objets.ContainsKey(chose))
@@ -161,16 +163,14 @@ namespace ConsoleApp5
                     {
                         Console.WriteLine("Il n'y en a plus...");
                     }
-
                 }
                 else
                 {
                     Console.WriteLine("Il n'y a pas de " + chose + " ici");
                 }
-
-
             }
 
+            //Jeter objet
             void Drop(string chose)
             {
                 if (!inventaire.ContainsKey(chose))
@@ -196,6 +196,7 @@ namespace ConsoleApp5
                 }
             }
 
+            //Utiliser objet
             void Use(string chose)
 
             {
@@ -218,16 +219,13 @@ namespace ConsoleApp5
                         {
                             currentRoom.enemis[i].Die();
                             if(currentRoom.enemis[i].finalBoss == true)
-                                                            {
-                                                            endGame();
-                                                            } 
-
+                                {
+                                EndGame();
+                                } 
                             currentRoom.enemis.RemoveAt(i);
-                            minusOne(chose);
-                                                                                       
+                            minusOne(chose);                                                                                       
                         }
-                    }                 
-                   
+                    }                   
                 }
                 else
                 {
@@ -236,30 +234,46 @@ namespace ConsoleApp5
 
             }
 
+            //Montrer inventaire
             void Show(string chose)
             {
-                if (chose != "inventory")
+                if(chose == "room")
+                {
+                    currentRoom.Decrit();
+                }
+
+                else if (chose == "inventory")
+                    {
+                        Console.WriteLine("Inventory : ");
+                    if (inventaire.Count <= 0)
+                    {
+                        Console.WriteLine("Nothing");
+                    }
+                    else
+                    {
+                        foreach (var item in inventaire.Keys)
+                        {
+                            Console.WriteLine(item);
+                        }
+                    }
+                    }
+                else
                 {
                     Console.WriteLine("Show what ?");
                 }
-                else
-                {
-                    Console.WriteLine("Inventory : ");
-                    foreach (var item in inventaire.Keys)
-                    {
-                        Console.WriteLine(item);
-                    }
-                }
+               
+                
             }
 
-            
+            //Retirer objet de l'inventaire
             void minusOne(string chose)
             {
                 inventaire[chose]--;
                 Console.WriteLine(string.Format("You have {0} {1} in your inventory", inventaire[chose], chose));
             }
 
-            void endGame()
+            //Fin du jeu
+            void EndGame()
             {
                 Console.WriteLine("Wow toutes mes félicitations!");
                 Console.WriteLine("Rejouer?");
@@ -267,15 +281,15 @@ namespace ConsoleApp5
                 if (rejouer == "oui")
                 {
                     Console.Clear();
-                    Run();
+                    isPlaying = false;
+                    CreateLevel();                    
                 }
                 else
                 {
                     Console.WriteLine("Tu n'as pas d'autre choix, mortel!");
-                    endGame();
+                    EndGame();
                 }
-            }
-                       
+            }                       
         }
     }
 }
