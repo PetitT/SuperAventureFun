@@ -13,6 +13,7 @@ namespace ConsoleApp5
         static void Main(string[] args)
         {
             myGame = new Game();
+            myGame.CreateLevel();
             myGame.Run();
         }
     }    
