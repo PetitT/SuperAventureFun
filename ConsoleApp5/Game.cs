@@ -67,14 +67,14 @@ namespace ConsoleApp5
                     roomList[4].enemis.Add(new Monstre("Le roi liche au super U?", "Plus facile qu'en 3.3.5", "deuillelombre"));
                     
                     //Room5
-                    roomList.Add(new Room("Wow quelle aventure ce fut! Je n'en crois pas mes yeux, c'était tellement bien!", 5));
+                    roomList.Add(new Room("La fin du monde", 5));
 
                     roomList[5].sorties.Add("south", 4);
 
                     roomList[5].objets.Add("deuillelombre", 1);
 
                     roomList[5].enemis.Add((new Monstre("Le dieu de la mort te fait coucou", "Littéralement épique", "pikachu")));                
-            
+                    
         }
 
         public void Run()
@@ -82,6 +82,7 @@ namespace ConsoleApp5
 
 
             var currentRoom = roomList[0];
+            var finalBoss = roomList[5].enemis;
 
             Console.WriteLine("Bienvenue dans, genre le donjon le plus compliqué du monde");
             currentRoom.Decrit();
@@ -93,6 +94,8 @@ namespace ConsoleApp5
                 var inputSplit = input.Split(' ');
                 var commande = inputSplit[0].ToLower();
                 var chose = inputSplit[1].ToLower();
+                
+                
                                                           
                 switch (commande)
                 {
@@ -119,7 +122,6 @@ namespace ConsoleApp5
                     default:
                         Console.WriteLine("I didn't understand");
                         break;
-
                 }
 
             }
@@ -217,10 +219,14 @@ namespace ConsoleApp5
                         {
                             currentRoom.enemis[i].Die();
                             currentRoom.enemis.RemoveAt(i);
+                            minusOne(chose);
+                                if(currentRoom.enemis == finalBoss)
+                                {
+                                endGame();
+                                }                                                        
                         }
-                    }
-                  
-                    minusOne(chose);
+                    }                 
+                   
                 }
                 else
                 {
@@ -245,13 +251,18 @@ namespace ConsoleApp5
                 }
             }
 
-
-
+            
             void minusOne(string chose)
             {
                 inventaire[chose]--;
                 Console.WriteLine(string.Format("You have {0} {1} in your inventory", inventaire[chose], chose));
             }
+
+            void endGame()
+            {
+                Console.WriteLine("Wow toutes mes félicitations!");
+            }
+                       
         }
     }
 }
