@@ -6,15 +6,24 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp5
 {
-    class Program
+    public class Program
     {
-        static Game myGame;
-
+       static Game myGame;
+    
         static void Main(string[] args)
         {
-            myGame = new Game();
-            myGame.CreateLevel();
-            myGame.Run();
+            Begin();
         }
+
+            public static void Begin()
+            {                
+                    myGame = new Game();
+                    myGame.CreateLevel();
+                    myGame.Run();        
+             
+                
+            }
+
+
     }    
 }

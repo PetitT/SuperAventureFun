@@ -6,13 +6,23 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp5
 {
-    class Game
+    public class Game
     {
+              
+        Room currentRoom;
 
-         
+        bool achievement1 = false;
+        bool achievement2 = false;
+        bool achievement3 = false;
 
-           Room currentRoom;
 
+        List<string> gotAchievements = new List<string>();
+        Dictionary<int, string> achievements = new Dictionary<int, string>()
+        {
+            { 1, "Congrats, you looted a potion" },
+            { 2, "Pika Pika" },
+            { 3, "Your first kill! You now have bloods on your hand" }
+        };
         Dictionary<string, int> inventaire = new Dictionary<string, int>();
         Dictionary<string, string> effects = new Dictionary<string, string>() 
         {
@@ -26,8 +36,8 @@ namespace ConsoleApp5
         public static List<Room> roomList = new List<Room>();
 
         public void CreateLevel()
-        {       
-
+        {
+                    roomList.Clear();
                     //Room0
                     roomList.Add(new Room("Entrée du donjon", 0));
 
@@ -85,44 +95,51 @@ namespace ConsoleApp5
 
         public void Run()
         {           
-            Console.WriteLine("Bienvenue dans, genre le donjon le plus compliqué du monde");
             currentRoom.Decrit();
-
+            Console.WriteLine("'Show commands' to get commands");
             bool isPlaying = true;
 
             while (isPlaying == true)
             {
                 var input = Console.ReadLine();
-                var inputSplit = input.Split(' ');
-                var commande = inputSplit[0].ToLower();
-                var chose = inputSplit[1].ToLower();                 
+                var inputSplit = input.Split(' ');  
                 
-                // Input
-                switch (commande)
+                if (inputSplit.Length == 2)
+                {                
+                var commande = inputSplit[0].ToLower();
+                var chose = inputSplit[1].ToLower();                  
+
+                    // Input
+                    switch (commande)
+                    {
+                        case ("take"):
+                            Take(chose);
+                            break;
+
+                        case ("drop"):
+                            Drop(chose);
+                            break;
+
+                        case ("use"):
+                            Use(chose);
+                            break;
+
+                        case ("go"):
+                            Go(chose);
+                            break;
+
+                        case ("show"):
+                            Show(chose);
+                            break;
+
+                        default:
+                            Console.WriteLine("I didn't understand");
+                            break;
+                    }
+                }
+                else
                 {
-                    case ("take"):
-                        Take(chose);
-                        break;
-
-                    case ("drop"):
-                        Drop(chose);
-                        break;
-
-                    case ("use"):
-                        Use(chose);
-                        break;
-
-                    case ("go"):
-                        Go(chose);
-                        break;
-
-                    case ("show"):
-                        Show(chose);
-                        break;
-
-                    default:
-                        Console.WriteLine("I didn't understand");
-                        break;
+                    Console.WriteLine("Commande foireuse");
                 }
             }
 
@@ -151,6 +168,18 @@ namespace ConsoleApp5
                         if (!inventaire.ContainsKey(chose))
                         {
                             inventaire.Add(chose, 1);
+                            if(chose == "potion" && !achievement1)
+                            {
+                                Console.WriteLine("You got an achievement!");
+                                gotAchievements.Add(achievements[1]);
+                                achievement1 = true;
+                            }
+                            else if(chose == "pikachu" && !achievement2)
+                            {
+                                Console.WriteLine("You got an achievement!");
+                                gotAchievements.Add(achievements[2]);
+                                achievement2 = true;
+                            }
                         }
                         else
                         {
@@ -234,35 +263,61 @@ namespace ConsoleApp5
 
             }
 
-            //Montrer inventaire
+            //Montrer des trucs
             void Show(string chose)
             {
-                if(chose == "room")
-                {
-                    currentRoom.Decrit();
-                }
+                switch (chose)
+                { 
+                    case "room":                 
+                        currentRoom.Decrit();                
+                        break;
 
-                else if (chose == "inventory")
-                    {
-                        Console.WriteLine("Inventory : ");
-                    if (inventaire.Count <= 0)
-                    {
-                        Console.WriteLine("Nothing");
-                    }
-                    else
-                    {
-                        foreach (var item in inventaire.Keys)
+                    case ("inventory"):                
+                    Console.WriteLine("Inventory : ");
+                        if (inventaire.Count <= 0)
                         {
-                            Console.WriteLine(item);
+                            Console.WriteLine("Nothing");
                         }
-                    }
-                    }
-                else
-                {
-                    Console.WriteLine("Show what ?");
+                        else
+                        {
+                            foreach (var item in inventaire.Keys)
+                            {
+                                Console.WriteLine(item);
+                            }
+                        }
+                    break;
+
+                    case ("commands"):
+                        ShowCommands();
+                        break;
+
+                    case ("achievements"):
+                        ShowAchievements();
+                        break;
+
+                    default:
+                        Console.WriteLine("Show what ?");
+                        break;
                 }
-               
-                
+            }
+            //montrer les commandes
+            void ShowCommands()
+            {
+                Console.WriteLine("'Take' to take an item");
+                Console.WriteLine("'Drop' to drop an item");
+                Console.WriteLine("'Use' to use an item");
+                Console.WriteLine("'Go' to go somewhere");
+                Console.WriteLine("'Show' inventory, room, commands");
+            }
+
+            //montrer les achievements
+
+            void ShowAchievements()
+            {
+                foreach (var item in gotAchievements)
+                {
+                    Console.WriteLine(item);
+                }
             }
 
             //Retirer objet de l'inventaire
@@ -281,8 +336,9 @@ namespace ConsoleApp5
                 if (rejouer == "oui")
                 {
                     Console.Clear();
-                    isPlaying = false;
-                    CreateLevel();                    
+                    CreateLevel();
+                    currentRoom.Decrit();
+
                 }
                 else
                 {

@@ -18,6 +18,7 @@ namespace ConsoleApp5
             
         public void Decrit()
         {
+            Console.Clear();
             Console.WriteLine("-----------------------------------------");
             Console.WriteLine(description);
             foreach (var item in enemis)
