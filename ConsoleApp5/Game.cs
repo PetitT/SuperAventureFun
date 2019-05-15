@@ -83,16 +83,8 @@ namespace ConsoleApp5
 
             var currentRoom = roomList[0];
 
-
-
-
-
-
             Console.WriteLine("Bienvenue dans, genre le donjon le plus compliqué du monde");
             currentRoom.Decrit();
-
-
-
 
             while (true)
             {
@@ -101,11 +93,7 @@ namespace ConsoleApp5
                 var inputSplit = input.Split(' ');
                 var commande = inputSplit[0].ToLower();
                 var chose = inputSplit[1].ToLower();
-
-
-
-
-
+                                                          
                 switch (commande)
                 {
                     case ("take"):
@@ -222,18 +210,16 @@ namespace ConsoleApp5
                 {                    
                     Console.WriteLine(effects[chose]);
 
-                    foreach (var item in currentRoom.enemis)
+
+                   for (int i = currentRoom.enemis.Count - 1; i >= 0; i--)
                     {
-                        if (chose == item.weakPoint)
+                        if (currentRoom.enemis[i].weakPoint == chose)
                         {
-                            foreach (var killed in currentRoom.enemis)
-                            {
-                                killed.Die();                                
-                            }
-                            
+                            currentRoom.enemis[i].Die();
+                            currentRoom.enemis.RemoveAt(i);
                         }
                     }
-                    //currentRoom.enemis.Remove();
+                  
                     minusOne(chose);
                 }
                 else
