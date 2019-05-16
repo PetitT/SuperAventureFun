@@ -11,11 +11,6 @@ namespace ConsoleApp5
               
         Room currentRoom;
 
-        bool achievement1 = false;
-        bool achievement2 = false;
-        bool achievement3 = false;
-
-
         List<string> gotAchievements = new List<string>();
         Dictionary<int, string> achievements = new Dictionary<int, string>()
         {
@@ -168,17 +163,15 @@ namespace ConsoleApp5
                         if (!inventaire.ContainsKey(chose))
                         {
                             inventaire.Add(chose, 1);
-                            if(chose == "potion" && !achievement1)
+                            if (chose == "potion" && !gotAchievements.Contains(achievements[1]))
                             {
                                 Console.WriteLine("You got an achievement!");
                                 gotAchievements.Add(achievements[1]);
-                                achievement1 = true;
                             }
-                            else if(chose == "pikachu" && !achievement2)
+                            else if(chose == "pikachu" && !gotAchievements.Contains(achievements[2]))
                             {
                                 Console.WriteLine("You got an achievement!");
                                 gotAchievements.Add(achievements[2]);
-                                achievement2 = true;
                             }
                         }
                         else
@@ -240,19 +233,23 @@ namespace ConsoleApp5
                 else if (effects.ContainsKey(chose))
                 {                    
                     Console.WriteLine(effects[chose]);
-
-
                    for (int i = currentRoom.enemis.Count - 1; i >= 0; i--)
                     {
                         if (currentRoom.enemis[i].weakPoint == chose)
                         {
                             currentRoom.enemis[i].Die();
+                            if (!gotAchievements.Contains(achievements[3]))
+                            {
+                                Console.WriteLine("You got an achievement");
+                                gotAchievements.Add(achievements[3]);
+                            }
+                            minusOne(chose);
                             if(currentRoom.enemis[i].finalBoss == true)
                                 {
                                 EndGame();
-                                } 
+                                }  
                             currentRoom.enemis.RemoveAt(i);
-                            minusOne(chose);                                                                                       
+                            
                         }
                     }                   
                 }
